@@ -70,21 +70,42 @@ mean(movies$Runtime)
 #Problem 4: Box office uses three units of measure
 head(movies$Box.Office)
 
+
+
 #Create a function to convert box office revenue
 
-convertBoxOffice <- function(boxoffice)
+convertBoxOffice <- function(boxOffice)
 {
-  stringBoxOffice <- as.character(boxoffice)
+  stringBoxOffice <- as.character(boxOffice)
   
-  replaceBoxOffice <- gusb("[$|k|m]","",stringBoxOffice)
+  replacedBoxOffice <- gsub("[$|k|M]", "", stringBoxOffice)
   
-  numericBoxOffice <- as.numeric(replaceBoxOffice)
+  numericBoxOffice <- as.numeric(replacedBoxOffice)
   
-  if(grepl("M",boxoffice)){
+  if(grepl("M", boxOffice)){
     numericBoxOffice
   }
-  else if(grepl("k",boxoffice)){
+  else if(grepl("k", boxOffice)){
+    numericBoxOffice * 0.001
     
+  }
+  else{
+    numericBoxOffice * 0.000001
   }
   
 }
+
+
+#Convert Box Office to single unit of measure (millions)
+movies$Box.Office <- sapply(movies$Box.Office, convertBoxOffice)
+
+
+#problem 4 is solved
+head(movies$Box.Office)
+class(movies$Box.Office)
+mean(movies$Box.Office)
+
+
+
+#save data to a csv file
+write.csv(movies,"Movies.csv")
